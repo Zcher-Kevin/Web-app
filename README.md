@@ -70,17 +70,3 @@ Web-app/
    ```bash
    npm run dev
    ```
-
-## TypeScript Integration
-
-This project uses TypeScript for both frontend and backend:
-
-- **Backend:** Express.js with TypeScript for improved code quality and maintainability
-- **Frontend:** React with TypeScript for type-safe component development
-
-### Benefits
-
-- Shared type definitions between frontend and backend
-- Improved developer experience with better tooling and autocompletion
-- Fewer runtime errors due to static type checking
-- Better code documentation through type annotations
