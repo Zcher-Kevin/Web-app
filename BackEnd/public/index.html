@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .endpoint {
+            background: #f4f4f4;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .get { background: #61affe; color: white; }
+        .post { background: #49cc90; color: white; }
+        .put { background: #fca130; color: white; }
+        .delete { background: #f93e3e; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Backend API is Running</h1>
+    <p>This is the static page served by the backend. The API is functioning properly if you can see this page.</p>
+    
+    <h2>Available Endpoints:</h2>
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/health</code> - Check server health
+    </div>
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/api/users</code> - Get all users
+    </div>
+    <div class="endpoint">
+        <span class="method get">GET</span> <code>/api/users/:id</code> - Get user by ID
+    </div>
+    <div class="endpoint">
+        <span class="method post">POST</span> <code>/api/users</code> - Create new user
+    </div>
+    <div class="endpoint">
+        <span class="method put">PUT</span> <code>/api/users/:id</code> - Update user
+    </div>
+    <div class="endpoint">
+        <span class="method delete">DELETE</span> <code>/api/users/:id</code> - Delete user
+    </div>
+
+    <h2>Test Connection:</h2>
+    <button id="testBtn">Test API Connection</button>
+    <div id="result" style="margin-top: 10px;"></div>
+
+    <script>
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            const resultDiv = document.getElementById('result');
+            try {
+                resultDiv.innerHTML = 'Testing connection...';
+                const response = await fetch('/health');
+                const data = await response.json();
+                resultDiv.innerHTML = `Connection successful! Response: ${JSON.stringify(data)}`;
+                resultDiv.style.color = 'green';
+            } catch (error) {
+                resultDiv.innerHTML = `Connection failed: ${error.message}`;
+                resultDiv.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+# Project-wide gitignore file
+
+# Ignore all .env files containing sensitive information
+**/.env
+**/.env.*
+!**/.env.example
+
+# Node modules in any subfolder
+**/node_modules/
+
+# Build directories
+**/dist/
+**/build/
+**/out/
+
+# Log files
+**/*.log
+**/logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local files
+**/*.local
+
+# Package locks (optional - uncomment if you want to ignore them)
+# **/package-lock.json
+# **/yarn.lock
+
+# MySQL password reset scripts
+**/mysql-reset-wizard.sh
+**/mysql-complete-reset.sh
+**/create-mysql-user.sh
+**/reset-mysql-password.sh
+**/MYSQL_PASSWORD_HELP.md
+
+# Temporary files
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.temp
+**/*~
+**/*.bak
