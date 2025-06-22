@@ -5,13 +5,29 @@
  * It verifies tokens and attaches user information to the request object.
  */
 
-const auth = (req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+
+// Extend the Express Request interface to include the user property
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        id: string;
+        role: string;
+      };
+    }
+  }
+}
+
+const auth = (req: Request, res: Response, next: NextFunction): void => {
   // Get token from request header
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+  const authHeader = req.header('Authorization');
+  const token = authHeader?.replace('Bearer ', '');
 
   // Check if token exists
   if (!token) {
-    return res.status(401).json({ error: 'Authentication required' });
+    res.status(401).json({ error: 'Authentication required' });
+    return;
   }
 
   try {
@@ -27,4 +43,4 @@ const auth = (req, res, next) => {
   }
 };
 
-module.exports = auth;
+export default auth;

@@ -5,9 +5,10 @@
  * It serves as a central router for organizing endpoint paths.
  */
 
-const express = require('express');
-const router = express.Router();
-const userController = require('../controllers/userController');
+import express, { Router } from 'express';
+import userController from '../controllers/userController';
+
+const router: Router = express.Router();
 
 // User routes
 router.get('/users', userController.getAllUsers);
@@ -17,6 +18,6 @@ router.put('/users/:id', userController.updateUser);
 router.delete('/users/:id', userController.deleteUser);
 
 // Add other routes as needed
-// Example: router.use('/products', require('./productRoutes'));
+// Example: router.use('/products', productRoutes);
 
-module.exports = router;
+export default router;

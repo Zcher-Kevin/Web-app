@@ -5,31 +5,20 @@
  * connects to routes, and starts the server.
  */
 
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const config = require('./config/env');
-const apiRoutes = require('./routes/api');
-const { testConnection } = require('./database/connection');
-const { initializeDatabase } = require('./database/init');
+import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+import path from 'path';
+import config from './config/env';
+import apiRoutes from './routes/api';
+import { testConnection } from './database/connection';
+import { initializeDatabase } from './database/init';
 
 // Initialize Express app
 const app = express();
 const PORT = config.port || 5000;
 
-// CORS Configuration - Very permissive for development
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  next();
-});
+// CORS Configuration
+app.use(cors());
 
 // Body parsers
 app.use(express.json()); // Parse JSON request body
@@ -39,7 +28,7 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bo
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ status: 'ok', message: 'Server is running' });
 });
 
@@ -47,12 +36,12 @@ app.get('/health', (req, res) => {
 app.use('/api', apiRoutes);
 
 // Home route
-app.get('/', (req, res) => {
+app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Welcome to the API' });
 });
 
 // Database status endpoint
-app.get('/db-status', async (req, res) => {
+app.get('/db-status', async (req: Request, res: Response) => {
   const isConnected = await testConnection();
   res.json({ 
     status: isConnected ? 'connected' : 'disconnected',
@@ -62,7 +51,7 @@ app.get('/db-status', async (req, res) => {
 });
 
 // Start server
-const startServer = async () => {
+const startServer = async (): Promise<void> => {
   try {
     // Initialize database
     await initializeDatabase();
@@ -72,17 +61,9 @@ const startServer = async () => {
       console.log(`Server is running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error.message);
+    console.error('Failed to start server:', error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 };
 
 startServer();
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
-
-module.exports = app; // Export for testing

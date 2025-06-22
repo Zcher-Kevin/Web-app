@@ -5,8 +5,8 @@
  * It uses the mysql2 package for better performance and full promise support.
  */
 
-const mysql = require('mysql2/promise');
-const config = require('../config/env');
+import mysql from 'mysql2/promise';
+import config from '../config/env';
 
 // Create a connection pool
 const pool = mysql.createPool({
@@ -21,20 +21,17 @@ const pool = mysql.createPool({
 });
 
 // Test the connection
-const testConnection = async () => {
+const testConnection = async (): Promise<boolean> => {
   try {
     const connection = await pool.getConnection();
     console.log('MySQL database connection established successfully');
     connection.release();
     return true;
   } catch (error) {
-    console.error('Error connecting to MySQL database:', error.message);
+    console.error('Error connecting to MySQL database:', error instanceof Error ? error.message : String(error));
     return false;
   }
 };
 
 // Export the connection pool and test function
-module.exports = {
-  pool,
-  testConnection
-};
+export { pool, testConnection };

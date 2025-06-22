@@ -104,6 +104,9 @@ reset-mysql-password.sh
 *mysql*reset*
 *MYSQL*PASSWORD*
 
+# TypeScript output
+*.tsbuildinfo
+
 # Other
 .vercel
 .serverless

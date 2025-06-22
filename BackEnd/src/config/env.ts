@@ -5,35 +5,35 @@
  * It centralizes all configuration to make the app more maintainable.
  */
 
+import dotenv from 'dotenv';
+import { AppConfig } from '../types';
+
 // Load environment variables from .env file in non-production environments
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
+  dotenv.config();
 }
 
 // Export configuration settings
-module.exports = {
+const config: AppConfig = {
   // Server configuration
-  port: process.env.PORT || 5000,
+  port: parseInt(process.env.PORT || '5000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
+  
+  // CORS configuration
+  corsOrigin: process.env.CORS_ORIGIN || '*',
   
   // MySQL Database configuration
   database: {
     host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 3306,
+    port: parseInt(process.env.DB_PORT || '3306', 10),
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
     database: process.env.DB_NAME || 'webappdb',
-    connectionLimit: process.env.DB_CONNECTION_LIMIT || 10,
+    connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT || '10', 10),
   },
   
   // JWT configuration (for future use)
-  jwt: {
-    secret: process.env.JWT_SECRET || 'your_jwt_secret',
-    expiresIn: process.env.JWT_EXPIRES_IN || '1d',
-  },
-  
-  // CORS configuration
-  cors: {
-    origin: process.env.CORS_ORIGIN || '*',
-  },
+  jwtSecret: process.env.JWT_SECRET || 'your_jwt_secret',
 };
+
+export default config;

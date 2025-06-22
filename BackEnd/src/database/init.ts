@@ -5,7 +5,8 @@
  * It also establishes relationships between tables and sets up initial data if needed.
  */
 
-const { pool } = require('./connection');
+import { pool } from './connection';
+import { RowDataPacket } from 'mysql2/promise';
 
 // SQL statements to create tables
 const createTablesQueries = {
@@ -48,7 +49,7 @@ const createTablesQueries = {
     )
   `,
   
-  // Order items table (example)
+  // Order Items table (example)
   createOrderItemsTable: `
     CREATE TABLE IF NOT EXISTS order_items (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,35 +57,43 @@ const createTablesQueries = {
       product_id INT NOT NULL,
       quantity INT NOT NULL,
       price DECIMAL(10, 2) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
       FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
     )
   `
 };
 
-// Initialize database
-const initializeDatabase = async () => {
+// Initialize the database
+const initializeDatabase = async (): Promise<boolean> => {
   try {
-    const connection = await pool.getConnection();
-    
-    // Create database if it doesn't exist
-    await connection.query(`CREATE DATABASE IF NOT EXISTS ${connection.config.database}`);
+    console.log('Initializing database...');
     
     // Create tables
-    for (const query of Object.values(createTablesQueries)) {
-      await connection.query(query);
-    }
+    await pool.query(createTablesQueries.createUsersTable);
+    console.log('Users table created or already exists');
     
-    console.log('Database initialized successfully');
-    connection.release();
+    await pool.query(createTablesQueries.createProductsTable);
+    console.log('Products table created or already exists');
+    
+    await pool.query(createTablesQueries.createOrdersTable);
+    console.log('Orders table created or already exists');
+    
+    await pool.query(createTablesQueries.createOrderItemsTable);
+    console.log('Order Items table created or already exists');
+    
+    // Check if tables were created successfully
+    const [tables] = await pool.query<RowDataPacket[]>('SHOW TABLES');
+    console.log('Database tables:', tables.map(table => Object.values(table)[0]).join(', '));
+    
+    console.log('Database initialization completed successfully');
     return true;
   } catch (error) {
-    console.error('Error initializing database:', error.message);
+    console.error('Error initializing database:', error instanceof Error ? error.message : String(error));
     return false;
   }
 };
 
-// Export initialization function
-module.exports = {
-  initializeDatabase
-};
+// Export the initialization function
+export { initializeDatabase };

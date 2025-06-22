@@ -1,12 +1,12 @@
 # Web Application Project
 
-This is a full-stack web application with a React frontend and Express/MySQL backend.
+This is a full-stack web application with a React/TypeScript frontend and Express/TypeScript/MySQL backend.
 
 ## Project Structure
 
 ```
 Web-app/
-├── BackEnd/           # Express.js server with MySQL
+├── BackEnd/           # Express.js server with TypeScript and MySQL
 ├── FrontEnd/          # React frontend (Vite + TypeScript)
 └── .gitignore         # Root-level gitignore file
 ```
@@ -40,8 +40,15 @@ Web-app/
    npm run setup-db
    ```
 
-5. Start the server:
+5. For development:
+
    ```bash
+   npm run dev
+   ```
+
+6. For production:
+   ```bash
+   npm run build
    npm start
    ```
 
@@ -63,3 +70,17 @@ Web-app/
    ```bash
    npm run dev
    ```
+
+## TypeScript Integration
+
+This project uses TypeScript for both frontend and backend:
+
+- **Backend:** Express.js with TypeScript for improved code quality and maintainability
+- **Frontend:** React with TypeScript for type-safe component development
+
+### Benefits
+
+- Shared type definitions between frontend and backend
+- Improved developer experience with better tooling and autocompletion
+- Fewer runtime errors due to static type checking
+- Better code documentation through type annotations
