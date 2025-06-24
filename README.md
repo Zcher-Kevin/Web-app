@@ -11,6 +11,9 @@ Web-app/
 └── .gitignore         # Root-level gitignore file
 ```
 
+## Project Idea 
+
+![Project](./Else/img/image.png)
 ## Getting Started
 
 ### Backend Setup
