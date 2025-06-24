@@ -14,6 +14,7 @@ Web-app/
 ## Project Idea 
 
 ![Project](./Else/img/image.png)
+reference : [https://metana.io/blog/12-top-full-stack-project-ideas-in-2024/]
 ## Getting Started
 
 ### Backend Setup
