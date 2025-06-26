@@ -10,7 +10,7 @@ Web-app/
 ├── FrontEnd/          # React frontend (Vite + TypeScript)
 └── .gitignore         # Root-level gitignore file
 ```
-
+using DBeaver for easy access the DataBase
 ## Project Idea 
 
 ![Project](./Else/img/image.png)
