@@ -2,10 +2,12 @@
  * Authentication Middleware
  * 
  * This middleware handles user authentication for protected routes.
- * It verifies tokens and attaches user information to the request object.
+ * It verifies JWT tokens and attaches user information to the request object.
  */
 
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import config from '../config/env';
 
 // Extend the Express Request interface to include the user property
 declare global {
@@ -13,7 +15,8 @@ declare global {
     interface Request {
       user?: {
         id: string;
-        role: string;
+        iat?: number;
+        exp?: number;
       };
     }
   }
@@ -31,15 +34,12 @@ const auth = (req: Request, res: Response, next: NextFunction): void => {
   }
 
   try {
-    // In a real app, you would verify the token using JWT or another method
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // req.user = decoded;
-    
-    // For now, just simulate authentication
-    req.user = { id: '123', role: 'user' };
+    // Verify the JWT token
+    const decoded = jwt.verify(token, config.jwtSecret || 'default_jwt_secret');
+    req.user = decoded as { id: string, iat: number, exp: number };
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
 

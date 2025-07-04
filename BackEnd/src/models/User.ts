@@ -104,6 +104,60 @@ class User {
   }
   
   /**
+   * Find a user by their email
+   * @param {string} email - Email to search for
+   * @returns {Promise<Object|null>} User object or null if not found
+   */
+  static async findByEmail(email: string): Promise<UserType | null> {
+    try {
+      const [rows] = await pool.query<UserRow[]>(
+        'SELECT id, username, email, full_name, created_at FROM users WHERE email = ?', 
+        [email]
+      );
+      if (rows.length === 0) return null;
+      
+      const user = rows[0];
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        createdAt: user.created_at
+      };
+    } catch (error) {
+      console.error(`Error finding user with email ${email}:`, error instanceof Error ? error.message : String(error));
+      return null;
+    }
+  }
+  
+  /**
+   * Find a user by username and include password for auth
+   * @param {string} username - Username to search for
+   * @returns {Promise<Object|null>} User object with password or null if not found
+   */
+  static async findByUsernameWithPassword(username: string): Promise<(UserType & { password: string }) | null> {
+    try {
+      const [rows] = await pool.query<(UserRow & { password: string })[]>(
+        'SELECT id, username, email, password, full_name, created_at FROM users WHERE username = ?', 
+        [username]
+      );
+      if (rows.length === 0) return null;
+      
+      const user = rows[0];
+      return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        fullName: user.full_name,
+        createdAt: user.created_at
+      };
+    } catch (error) {
+      console.error(`Error finding user with username ${username}:`, error instanceof Error ? error.message : String(error));
+      return null;
+    }
+  }
+  
+  /**
    * Create a new user
    * @param {Object} userData - User data object
    * @returns {Promise<Object|null>} Created user object or null on error

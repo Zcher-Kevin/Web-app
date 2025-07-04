@@ -7,15 +7,22 @@
 
 import express, { Router } from 'express';
 import userController from '../controllers/userController';
+import authController from '../controllers/authController';
+import auth from '../middleware/auth';
 
 const router: Router = express.Router();
 
-// User routes
-router.get('/users', userController.getAllUsers);
-router.get('/users/:id', userController.getUserById);
-router.post('/users', userController.createUser);
-router.put('/users/:id', userController.updateUser);
-router.delete('/users/:id', userController.deleteUser);
+// Authentication routes
+router.post('/auth/register', authController.register);
+router.post('/auth/login', authController.login);
+router.get('/auth/me', auth, authController.getCurrentUser);
+
+// User routes (protected with auth middleware)
+router.get('/users', auth, userController.getAllUsers);
+router.get('/users/:id', auth, userController.getUserById);
+router.post('/users', auth, userController.createUser);
+router.put('/users/:id', auth, userController.updateUser);
+router.delete('/users/:id', auth, userController.deleteUser);
 
 // Add other routes as needed
 // Example: router.use('/products', productRoutes);
